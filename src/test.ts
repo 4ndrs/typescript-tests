@@ -1,6 +1,9 @@
-#!/usr/bin/env node
-const say = (text: string) => {
-  console.log(text);
+export const main = () => {
+  const firstArg = process.argv.slice(2)[0];
+
+  say(firstArg);
 };
 
-say("Hello, world");
+const say = (text: string) => {
+  console.info(text);
+};
