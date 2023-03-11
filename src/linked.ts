@@ -92,11 +92,7 @@ class LinkedList<T> {
     return value;
   };
 
-  [Symbol.iterator] = () => {
-    const generator = this.getGenerator();
-
-    return generator();
-  };
+  [Symbol.iterator] = () => this.valueGenerator();
 
   get head() {
     if (this.head_) {
@@ -114,22 +110,13 @@ class LinkedList<T> {
     return this.length_;
   }
 
-  public toArray = () => {
-    const generator = this.getGenerator();
+  public toArray = () => Array.from<T>(this.valueGenerator());
 
-    return Array.from<T>(generator());
-  };
-
-  private getGenerator = () => {
-    let node = this.head_;
-
-    return function* () {
-      while (node) {
-        yield node.value;
-        node = node.next;
-      }
-    };
-  };
+  private *valueGenerator() {
+    for (let node = this.head_; node !== undefined; node = node.next) {
+      yield node.value;
+    }
+  }
 
   private *nodeGenerator() {
     for (let node = this.head_; node !== undefined; node = node.next) {
