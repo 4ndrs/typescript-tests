@@ -65,6 +65,33 @@ class LinkedList<T> {
     this.length_ += 1;
   };
 
+  public pop = () => {
+    if (!this.tail_) {
+      return;
+    }
+
+    const value = this.tail_.value;
+
+    // O(n)
+    const previousNode = [...this.nodeGenerator()].find(
+      (node) => node.next && !node.next.next
+    );
+
+    if (!previousNode) {
+      this.head_ = previousNode;
+    }
+
+    this.tail_ = previousNode;
+
+    if (this.tail_) {
+      this.tail_.next = undefined;
+    }
+
+    this.length_ -= 1;
+
+    return value;
+  };
+
   [Symbol.iterator] = () => {
     const generator = this.getGenerator();
 
@@ -103,6 +130,12 @@ class LinkedList<T> {
       }
     };
   };
+
+  private *nodeGenerator() {
+    for (let node = this.head_; node !== undefined; node = node.next) {
+      yield node;
+    }
+  }
 }
 
 export { LinkedList };

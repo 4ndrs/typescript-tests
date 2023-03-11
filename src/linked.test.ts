@@ -67,4 +67,27 @@ describe("Linked lists", () => {
     expect(list.tail).not.toBeDefined();
     expect(list.length).toBe(0);
   });
+
+  test("Pop removes the last item and returns it", () => {
+    const list = new LinkedList(1);
+
+    list.push(2);
+    list.push(3);
+
+    expect(list.pop()).toBe(3);
+    expect(list.length).toBe(2);
+    expect(list.head).toBe(1);
+    expect(list.tail).toBe(2);
+
+    list.pop();
+
+    expect(list.head).toBe(1);
+    expect(list.tail).toBe(1);
+
+    list.pop();
+
+    expect(list.head).not.toBeDefined();
+    expect(list.tail).not.toBeDefined();
+    expect(list.length).toBe(0);
+  });
 });
