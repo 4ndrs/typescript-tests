@@ -39,4 +39,13 @@ describe("Linked lists", () => {
 
     expect(empty.toArray()).toEqual([]);
   });
+
+  test("Lists are iterable", () => {
+    const list = new LinkedList(1);
+
+    list.push(2);
+    list.push(3);
+
+    expect([...list]).toEqual([1, 2, 3]);
+  });
 });

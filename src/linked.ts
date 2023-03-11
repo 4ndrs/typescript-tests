@@ -47,6 +47,12 @@ class LinkedList<T> {
     this.length_ += 1;
   };
 
+  [Symbol.iterator] = () => {
+    const generator = this.getGenerator();
+
+    return generator();
+  };
+
   get head() {
     if (this.head_) {
       return this.head_.value;
