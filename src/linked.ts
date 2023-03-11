@@ -31,6 +31,24 @@ class LinkedList<T> {
     this.length_ += 1;
   };
 
+  public shift = () => {
+    if (!this.head_) {
+      return;
+    }
+
+    const value = this.head_.value;
+
+    this.head_ = this.head_.next;
+
+    if (!this.head_) {
+      this.tail_ = this.head_;
+    }
+
+    this.length_ -= 1;
+
+    return value;
+  };
+
   public push = (value: T) => {
     const node = new LinkedNode(value);
 

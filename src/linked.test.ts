@@ -48,4 +48,23 @@ describe("Linked lists", () => {
 
     expect([...list]).toEqual([1, 2, 3]);
   });
+
+  test("Shift removes the first item and returns it", () => {
+    const list = new LinkedList(1);
+
+    list.unshift(2);
+    list.unshift(3);
+
+    expect([...list]).toEqual([3, 2, 1]);
+    expect(list.shift()).toBe(3);
+    expect([...list]).toEqual([2, 1]);
+    expect(list.length).toBe(2);
+
+    list.shift();
+    list.shift();
+
+    expect(list.head).not.toBeDefined();
+    expect(list.tail).not.toBeDefined();
+    expect(list.length).toBe(0);
+  });
 });
