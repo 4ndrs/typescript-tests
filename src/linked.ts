@@ -1,15 +1,15 @@
-class LinkedNode<T> {
+class Node<T> {
   value: T;
-  next: LinkedNode<T> | undefined;
+  next: Node<T> | undefined;
 
   constructor(value: T) {
     this.value = value;
   }
 }
 
-class LinkedList<T> {
-  private head_: LinkedNode<T> | undefined;
-  private tail_: LinkedNode<T> | undefined;
+class Linked<T> {
+  private head_: Node<T> | undefined;
+  private tail_: Node<T> | undefined;
   private length_ = 0;
 
   constructor(value?: T) {
@@ -18,8 +18,8 @@ class LinkedList<T> {
     }
   }
 
-  public unshift = (value: T) => {
-    const node = new LinkedNode(value);
+  protected unshift(value: T) {
+    const node = new Node(value);
 
     if (this.head) {
       node.next = this.head_;
@@ -29,9 +29,9 @@ class LinkedList<T> {
 
     this.head_ = node;
     this.length_ += 1;
-  };
+  }
 
-  public shift = () => {
+  protected shift() {
     if (!this.head_) {
       return;
     }
@@ -47,10 +47,10 @@ class LinkedList<T> {
     this.length_ -= 1;
 
     return value;
-  };
+  }
 
-  public push = (value: T) => {
-    const node = new LinkedNode(value);
+  protected push(value: T) {
+    const node = new Node(value);
 
     if (this.tail_) {
       this.tail_.next = node;
@@ -63,9 +63,9 @@ class LinkedList<T> {
     this.head_ = node;
     this.tail_ = node;
     this.length_ += 1;
-  };
+  }
 
-  public pop = () => {
+  protected pop() {
     if (!this.tail_) {
       return;
     }
@@ -90,7 +90,7 @@ class LinkedList<T> {
     this.length_ -= 1;
 
     return value;
-  };
+  }
 
   [Symbol.iterator] = () => this.valueGenerator();
 
@@ -125,4 +125,22 @@ class LinkedList<T> {
   }
 }
 
-export { LinkedList };
+class LinkedList<T> extends Linked<T> {
+  public shift() {
+    return super.shift();
+  }
+
+  public unshift(value: T) {
+    return super.unshift(value);
+  }
+
+  public pop() {
+    return super.pop();
+  }
+
+  public push(value: T) {
+    return super.push(value);
+  }
+}
+
+export { LinkedList, Linked };
