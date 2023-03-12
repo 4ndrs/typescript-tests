@@ -61,4 +61,41 @@ describe("Named binary trees", () => {
     expect(tree.length).toBe(2);
     expect(tree.find("Sabine")).not.toBeDefined();
   });
+
+  test("Able to iterate over with depth first approach", () => {
+    const tree = new NamedBinaryTree();
+
+    const mitsuha = { name: "Mitsuha von Yamano" };
+    const colette = { name: "Colette" };
+    const beatrice = { name: "Beatrice von Bozes" };
+    const adelaide = { name: "Adelaide von Ryner" };
+    const sabine = { name: "Sabine" };
+    const iris = { name: "Iris von Bozes" };
+
+    //            mitsuha
+    //            /     \
+    //        colette  sabine
+    //         /    \
+    //     beatrice iris
+    //      /
+    //  adelaide
+    //
+    // mitsuha -> colette -> beatrice -> adelaide -> iris -> sabine
+
+    tree.insert(mitsuha);
+    tree.insert(colette);
+    tree.insert(beatrice);
+    tree.insert(adelaide);
+    tree.insert(sabine);
+    tree.insert(iris);
+
+    expect([...tree]).toEqual([
+      mitsuha,
+      colette,
+      beatrice,
+      adelaide,
+      iris,
+      sabine,
+    ]);
+  });
 });

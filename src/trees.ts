@@ -75,6 +75,29 @@ class NamedBinaryTree<T extends { name: string }> {
       }
     }
   }
+
+  [Symbol.iterator] = () => this.valueGenerator();
+
+  // Depth First Search (DFS)
+  private *valueGenerator() {
+    const stack: typeof this.root[] = [];
+
+    stack.push(this.root);
+
+    //console.log(JSON.stringify(this.root, null, 2));
+
+    for (let node = stack.pop(); node !== undefined; node = stack.pop()) {
+      yield node.value;
+
+      if (node.right) {
+        stack.push(node.right);
+      }
+
+      if (node.left) {
+        stack.push(node.left);
+      }
+    }
+  }
 }
 
 export { NamedBinaryTree };
