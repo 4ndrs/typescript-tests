@@ -12,6 +12,16 @@ class NamedBinaryTree<T extends { name: string }> {
   private root?: Node<T>;
   private length_ = 0;
 
+  constructor(...values: T[]);
+  constructor(values?: T[]);
+  constructor(...values: T[]) {
+    if (Array.isArray(values[0])) {
+      values = values[0];
+    }
+
+    values.forEach((value) => this.insert(value));
+  }
+
   public get length() {
     return this.length_;
   }

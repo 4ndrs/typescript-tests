@@ -98,4 +98,22 @@ describe("Named binary trees", () => {
       sabine,
     ]);
   });
+
+  test("Allows initializing the tree with multiple values", () => {
+    const mitsuha = { name: "Mitsuha von Yamano", id: 3 };
+    const colette = { name: "Colette", id: 4 };
+    const beatrice = { name: "Beatrice von Bozes", id: 0 };
+
+    const tree = new NamedBinaryTree(mitsuha, colette, beatrice);
+
+    expect(tree.find(mitsuha.name)).toBeDefined();
+    expect(tree.find(colette.name)).toBeDefined();
+    expect(tree.find(beatrice.name)).toBeDefined();
+
+    const tree2 = new NamedBinaryTree([colette, beatrice, mitsuha]);
+
+    expect(tree2.find(mitsuha.name)).toBeDefined();
+    expect(tree2.find(colette.name)).toBeDefined();
+    expect(tree2.find(beatrice.name)).toBeDefined();
+  });
 });
