@@ -62,6 +62,10 @@ class NamedBinaryTree<T extends { name: string }> {
     }
   }
 
+  public toString() {
+    return JSON.stringify(this.root, null, 2);
+  }
+
   private *follow(value: string) {
     let node = this.root;
 
@@ -83,8 +87,6 @@ class NamedBinaryTree<T extends { name: string }> {
     const stack: typeof this.root[] = [];
 
     stack.push(this.root);
-
-    //console.log(JSON.stringify(this.root, null, 2));
 
     for (let node = stack.pop(); node !== undefined; node = stack.pop()) {
       yield node.value;
