@@ -72,6 +72,10 @@ class NamedBinaryTree<T extends { name: string }> {
     }
   }
 
+  public toArray(options = { breadthFirst: false }) {
+    return Array.from(this.valueGenerator(options));
+  }
+
   public toString() {
     return JSON.stringify(this.root, null, 2);
   }
@@ -92,21 +96,32 @@ class NamedBinaryTree<T extends { name: string }> {
 
   [Symbol.iterator] = () => this.valueGenerator();
 
-  // Depth First Search (DFS)
-  private *valueGenerator() {
-    const stack: typeof this.root[] = [];
+  private *valueGenerator(options = { breadthFirst: false }) {
+    const container: typeof this.root[] = [this.root];
 
-    stack.push(this.root);
-
-    for (let node = stack.pop(); node !== undefined; node = stack.pop()) {
+    for (let node = container.pop(); node; node = container.pop()) {
       yield node.value;
 
+      if (options.breadthFirst) {
+        // Breadth First Search (BFS) (queue)
+        if (node.left) {
+          container.unshift(node.left);
+        }
+
+        if (node.right) {
+          container.unshift(node.right);
+        }
+
+        continue;
+      }
+
+      // Depth First Search (DFS) (stack)
       if (node.right) {
-        stack.push(node.right);
+        container.push(node.right);
       }
 
       if (node.left) {
-        stack.push(node.left);
+        container.push(node.left);
       }
     }
   }

@@ -116,4 +116,41 @@ describe("Named binary trees", () => {
     expect(tree2.find(colette.name)).toBeDefined();
     expect(tree2.find(beatrice.name)).toBeDefined();
   });
+
+  test("toArray can return an array using breadth first approach", () => {
+    const mitsuha = { name: "Mitsuha von Yamano" };
+    const colette = { name: "Colette" };
+    const beatrice = { name: "Beatrice von Bozes" };
+    const adelaide = { name: "Adelaide von Ryner" };
+    const sabine = { name: "Sabine" };
+    const iris = { name: "Iris von Bozes" };
+
+    const tree = new NamedBinaryTree(
+      mitsuha,
+      colette,
+      beatrice,
+      adelaide,
+      sabine,
+      iris
+    );
+
+    //            mitsuha
+    //            /     \
+    //        colette  sabine
+    //         /    \
+    //     beatrice iris
+    //      /
+    //  adelaide
+    //
+    // mitsuha -> colette -> sabine -> beatrice -> iris -> adelaide
+
+    expect(tree.toArray({ breadthFirst: true })).toEqual([
+      mitsuha,
+      colette,
+      sabine,
+      beatrice,
+      iris,
+      adelaide,
+    ]);
+  });
 });
