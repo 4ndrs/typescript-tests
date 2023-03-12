@@ -24,7 +24,12 @@ class NamedBinaryTree<T extends { name: string }> {
         return;
       }
 
-      if (!node.right && !node.left) {
+      if (
+        (!node.right && !node.left) ||
+        (!node.right &&
+          value.name.toLowerCase() > node.value.name.toLowerCase()) ||
+        (!node.left && value.name.toLowerCase() < node.value.name.toLowerCase())
+      ) {
         parent = node;
         break;
       }
