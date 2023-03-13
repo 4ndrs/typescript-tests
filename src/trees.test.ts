@@ -125,6 +125,81 @@ describe("Named binary trees", () => {
     expect(tree.length).toBe(5);
   });
 
+  test("Removing the root does not break the tree", () => {
+    const mitsuha = { name: "Mitsuha von Yamano" };
+    const colette = { name: "Colette" };
+    const beatrice = { name: "Beatrice von Bozes" };
+    const adelaide = { name: "Adelaide von Ryner" };
+    const sabine = { name: "Sabine" };
+    const iris = { name: "Iris von Bozes" };
+    const eline = { name: "Eline" };
+    const klaus = { name: "Klaus von Bozes" };
+
+    const tree = new NamedBinaryTree(
+      mitsuha,
+      colette,
+      beatrice,
+      adelaide,
+      sabine,
+      iris,
+      klaus,
+      eline
+    );
+
+    //           (mitsuha)
+    //            /     \
+    //         colette  sabine
+    //         /    \
+    //     beatrice iris
+    //      /       /  \
+    //  adelaide eline klaus
+    //
+    // Remove -> (mitsuha)
+    //
+    //          (sabine)
+    //            /
+    //        colette
+    //         /    \
+    //     beatrice iris
+    //      /       /  \
+    //  adelaide eline klaus
+
+    expect(tree.remove(mitsuha.name)).toEqual(mitsuha);
+    expect(tree.length).toBe(7);
+
+    expect(tree.toArray({ breadthFirst: true })).toEqual([
+      sabine,
+      colette,
+      beatrice,
+      iris,
+      adelaide,
+      eline,
+      klaus,
+    ]);
+
+    expect(tree.remove(sabine.name)).toEqual(sabine);
+    expect(tree.length).toBe(6);
+
+    expect(tree.toArray({ breadthFirst: true })).toEqual([
+      colette,
+      beatrice,
+      iris,
+      adelaide,
+      eline,
+      klaus,
+    ]);
+
+    expect(tree.remove(colette.name)).toEqual(colette);
+    expect(tree.remove(beatrice.name)).toEqual(beatrice);
+    expect(tree.remove(iris.name)).toEqual(iris);
+    expect(tree.remove(adelaide.name)).toEqual(adelaide);
+    expect(tree.remove(eline.name)).toEqual(eline);
+    expect(tree.remove(klaus.name)).toEqual(klaus);
+
+    expect(tree.length).toBe(0);
+    expect([...tree]).toEqual([]);
+  });
+
   test("Able to iterate over with depth first approach", () => {
     const tree = new NamedBinaryTree();
 

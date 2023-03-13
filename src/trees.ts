@@ -67,11 +67,15 @@ class NamedBinaryTree<T extends { name: string }> {
       return;
     }
 
+    const isRoot = parent.value.name === node.value.name;
+
     const parentValueIsGreater =
       parent.value.name.toLowerCase() > node.value.name.toLowerCase();
 
     if (!node.left && !node.right) {
-      if (parentValueIsGreater) {
+      if (isRoot) {
+        this.root = undefined;
+      } else if (parentValueIsGreater) {
         parent.left = undefined;
       } else {
         parent.right = undefined;
@@ -83,7 +87,12 @@ class NamedBinaryTree<T extends { name: string }> {
     }
 
     if (!node.left && node.right) {
-      if (parentValueIsGreater) {
+      if (isRoot && this.root) {
+        const right = this.root.right;
+
+        this.root.right = undefined;
+        this.root = right;
+      } else if (parentValueIsGreater) {
         parent.left = node.right;
       } else {
         parent.right = node.right;
@@ -96,7 +105,12 @@ class NamedBinaryTree<T extends { name: string }> {
     }
 
     if (node.left && !node.right) {
-      if (parentValueIsGreater) {
+      if (isRoot && this.root) {
+        const left = this.root.left;
+
+        this.root.left = undefined;
+        this.root = left;
+      } else if (parentValueIsGreater) {
         parent.left = node.left;
       } else {
         parent.right = node.left;
@@ -112,18 +126,29 @@ class NamedBinaryTree<T extends { name: string }> {
       const { successor, previous: successorParent } =
         this.findInOrderSuccessor(node);
 
-      if (parentValueIsGreater) {
+      const right = node.right;
+      const left = node.left;
+
+      if (isRoot && this.root) {
+        this.root.left = undefined;
+        this.root.right = undefined;
+        this.root = successor;
+      } else if (parentValueIsGreater) {
         parent.left = successor;
       } else {
         parent.right = successor;
       }
 
-      if (successor.value.name !== node.right.value.name) {
-        successor.right = node.right;
-        successor.left = node.left;
+      if (successor.value.name !== right.value.name) {
+        successor.right = right;
       }
 
-      successorParent.left = undefined;
+      successor.left = left;
+
+      if (!isRoot || successorParent.value.name !== node.value.name) {
+        successorParent.left = undefined;
+      }
+
       this.length_ -= 1;
 
       return node.value;
