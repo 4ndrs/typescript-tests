@@ -61,7 +61,73 @@ class NamedBinaryTree<T extends { name: string }> {
   }
 
   public remove(name: string) {
-    return;
+    const { node, previous: parent } = this.findNode(name);
+
+    if (!node || !parent) {
+      return;
+    }
+
+    const parentValueIsGreater =
+      parent.value.name.toLowerCase() > node.value.name.toLowerCase();
+
+    if (!node.left && !node.right) {
+      if (parentValueIsGreater) {
+        parent.left = undefined;
+      } else {
+        parent.right = undefined;
+      }
+
+      this.length_ -= 1;
+
+      return node.value;
+    }
+
+    if (!node.left && node.right) {
+      if (parentValueIsGreater) {
+        parent.left = node.right;
+      } else {
+        parent.right = node.right;
+      }
+
+      node.right = undefined;
+      this.length_ -= 1;
+
+      return node.value;
+    }
+
+    if (node.left && !node.right) {
+      if (parentValueIsGreater) {
+        parent.left = node.left;
+      } else {
+        parent.right = node.left;
+      }
+
+      node.left = undefined;
+      this.length_ -= 1;
+
+      return node.value;
+    }
+
+    if (node.left && node.right) {
+      const { successor, previous: successorParent } =
+        this.findInOrderSuccessor(node);
+
+      if (parentValueIsGreater) {
+        parent.left = successor;
+      } else {
+        parent.right = successor;
+      }
+
+      if (successor.value.name !== node.right.value.name) {
+        successor.right = node.right;
+        successor.left = node.left;
+      }
+
+      successorParent.left = undefined;
+      this.length_ -= 1;
+
+      return node.value;
+    }
   }
 
   public find(name: string) {
@@ -80,8 +146,39 @@ class NamedBinaryTree<T extends { name: string }> {
     return JSON.stringify(this.root, null, 2);
   }
 
-  private *follow(value: string) {
-    let node = this.root;
+  [Symbol.iterator] = () => this.valueGenerator();
+
+  private findNode(name: string, startNode = this.root) {
+    const result = { previous: startNode, node: startNode };
+
+    for (const node of this.follow(name, startNode)) {
+      if (node.value.name.toLowerCase() === name.toLowerCase()) {
+        result.node = node;
+
+        return result;
+      }
+      result.previous = node;
+    }
+
+    return { previous: undefined, node: undefined };
+  }
+
+  private findInOrderSuccessor(startNode: Node<T>) {
+    const result = { previous: startNode, successor: startNode };
+
+    for (const node of this.follow(startNode.value.name, startNode)) {
+      if (node.left) {
+        result.previous = node;
+      } else {
+        result.successor = node;
+        break;
+      }
+    }
+    return result;
+  }
+
+  private *follow(value: string, startNode = this.root) {
+    let node = startNode;
 
     while (node) {
       yield node;
@@ -93,8 +190,6 @@ class NamedBinaryTree<T extends { name: string }> {
       }
     }
   }
-
-  [Symbol.iterator] = () => this.valueGenerator();
 
   private *valueGenerator(options = { breadthFirst: false }) {
     const container: typeof this.root[] = [this.root];

@@ -45,21 +45,84 @@ describe("Named binary trees", () => {
   });
 
   test("Able to remove objects", () => {
-    const mitsuha = { name: "Mitsuha von Yamano", id: 1 };
-    const colette = { name: "Colette", id: 2 };
-    const sabine = { name: "Sabine", id: 3 };
+    const mitsuha = { name: "Mitsuha von Yamano" };
+    const colette = { name: "Colette" };
+    const beatrice = { name: "Beatrice von Bozes" };
+    const adelaide = { name: "Adelaide von Ryner" };
+    const sabine = { name: "Sabine" };
+    const iris = { name: "Iris von Bozes" };
+    const eline = { name: "Eline" };
+    const klaus = { name: "Klaus von Bozes" };
 
-    const tree = new NamedBinaryTree<typeof mitsuha>();
+    const tree = new NamedBinaryTree(
+      mitsuha,
+      colette,
+      beatrice,
+      adelaide,
+      sabine,
+      iris,
+      klaus,
+      eline
+    );
 
-    tree.insert(mitsuha);
-    tree.insert(colette);
-    tree.insert(sabine);
+    //            mitsuha
+    //            /     \
+    //       (colette)  sabine
+    //         /    \
+    //     beatrice iris
+    //      /       /  \
+    //  adelaide eline klaus
+    //
+    // Remove -> (colette) -> place in order successor
+    //   (smallest in the right subtree, eline)
+    //
+    //            mitsuha
+    //            /     \
+    //        (eline)  sabine
+    //         /    \
+    //     beatrice iris
+    //      /          \
+    //  adelaide      klaus
+    //
 
-    tree.remove("Adelaide");
-    expect(tree.length).toBe(3);
-    tree.remove("Sabine");
-    expect(tree.length).toBe(2);
-    expect(tree.find("Sabine")).not.toBeDefined();
+    expect(tree.remove("amalia")).not.toBeDefined();
+    expect(tree.length).toBe(8);
+    expect(tree.remove("colette")).toEqual(colette);
+    expect(tree.length).toBe(7);
+    expect(tree.find("colette")).not.toBeDefined();
+
+    expect([...tree]).toEqual([
+      mitsuha,
+      eline,
+      beatrice,
+      adelaide,
+      iris,
+      klaus,
+      sabine,
+    ]);
+
+    tree.remove(klaus.name);
+
+    expect(tree.toArray({ breadthFirst: true })).toEqual([
+      mitsuha,
+      eline,
+      sabine,
+      beatrice,
+      iris,
+      adelaide,
+    ]);
+
+    tree.remove(beatrice.name);
+
+    expect(tree.toArray({ breadthFirst: true })).toEqual([
+      mitsuha,
+      eline,
+      sabine,
+      adelaide,
+      iris,
+    ]);
+
+    expect(tree.length).toBe(5);
   });
 
   test("Able to iterate over with depth first approach", () => {
