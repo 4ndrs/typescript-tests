@@ -145,12 +145,49 @@ class Graph<T extends { name: string }> {
     return !!node1.edgesList.find((edge) => edge.value === value2);
   }
 
+  public traverse(value: T) {
+    const node = this.nodes[value.name];
+
+    if (!node) {
+      return;
+    }
+
+    return [...this.generator(node)].map((node) => node.value);
+  }
+
   public print() {
     Object.values(this.nodes).forEach((node) =>
       node.edgesList.forEach((edge) =>
         console.info(`${node.value.name} is connected to ${edge.value.name}`)
       )
     );
+  }
+
+  private *generator(startNode: Node<T>) {
+    // breadth first search (BFS)
+    const queue = [startNode];
+    const queued: { [key: string]: boolean } = {};
+
+    queued[startNode.value.name] = true;
+
+    for (let node = queue.pop(); node; node = queue.pop()) {
+      yield node;
+
+      const unvisitedChildren = node.edgesList.reduceRight<Node<T>[]>(
+        (accumulator, child) => {
+          if (queued[child.value.name]) {
+            return accumulator;
+          }
+
+          queued[child.value.name] = true;
+
+          return [...accumulator, child];
+        },
+        []
+      );
+
+      queue.unshift(...unvisitedChildren);
+    }
   }
 }
 

@@ -66,4 +66,43 @@ describe("Adjacency List", () => {
     expect(graph.isConnected(rika, dalia)).toBe(true);
     expect(graph.isConnected(rika, saori)).toBe(false);
   });
+
+  test("breadth first search", () => {
+    const bos = { name: "BOS" };
+    const jfk = { name: "JFK" };
+    const dfw = { name: "DFW" };
+    const mia = { name: "MIA" };
+    const lax = { name: "LAX" };
+    const hnl = { name: "HNL" };
+    const san = { name: "SAN" };
+    const ewr = { name: "EWR" };
+    const mico = { name: "MICO" };
+    const pbi = { name: "PBI" };
+
+    const graph = new Graph(bos, jfk, dfw, mia, lax, hnl, san, ewr, mico, pbi);
+
+    graph.connect(dfw, lax);
+    graph.connect(dfw, jfk);
+    graph.connect(lax, hnl);
+    graph.connect(lax, san);
+    graph.connect(lax, ewr);
+    graph.connect(jfk, mia);
+    graph.connect(jfk, bos);
+    graph.connect(mia, pbi);
+    graph.connect(mia, mico);
+    graph.connect(pbi, mico);
+
+    expect(graph.traverse(dfw)).toEqual([
+      dfw,
+      lax,
+      jfk,
+      hnl,
+      san,
+      ewr,
+      mia,
+      bos,
+      pbi,
+      mico,
+    ]);
+  });
 });
