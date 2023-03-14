@@ -155,6 +155,55 @@ class Graph<T extends { name: string }> {
     return [...this.generator(node)].map((node) => node.value);
   }
 
+  public findShortestPath(startNode: T, endNode: T) {
+    const start = this.nodes[startNode.name];
+    const end = this.nodes[endNode.name];
+
+    if (!start || !end) {
+      return;
+    }
+
+    const pathStack: T[] = [];
+
+    // breadth first search (BFS)
+    const queue = [start];
+    const queued: { [key: string]: boolean } = {};
+
+    queued[start.value.name] = true;
+
+    for (let node = queue.pop(); node; node = queue.pop()) {
+      pathStack.push(node.value);
+
+      if (node.value.name === end.value.name) {
+        return pathStack;
+      }
+
+      const unvisitedChildren = node.edgesList.reduceRight<Node<T>[]>(
+        (accumulator, child) => {
+          if (queued[child.value.name]) {
+            return accumulator;
+          }
+
+          queued[child.value.name] = true;
+
+          return [...accumulator, child];
+        },
+        []
+      );
+
+      if (node.value.name === "LAX") {
+        console.log("NODE: ", node);
+        console.log("children: ", unvisitedChildren);
+      }
+
+      if (unvisitedChildren.length > 0) {
+        queue.unshift(...unvisitedChildren);
+      } else {
+        pathStack.pop();
+      }
+    }
+  }
+
   public print() {
     Object.values(this.nodes).forEach((node) =>
       node.edgesList.forEach((edge) =>

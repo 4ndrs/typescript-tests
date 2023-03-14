@@ -105,4 +105,37 @@ describe("Adjacency List", () => {
       mico,
     ]);
   });
+
+  test("find shortest path", () => {
+    const bos = { name: "BOS" };
+    const jfk = { name: "JFK" };
+    const dfw = { name: "DFW" };
+    const mia = { name: "MIA" };
+    const lax = { name: "LAX" };
+    const hnl = { name: "HNL" };
+    const san = { name: "SAN" };
+    const ewr = { name: "EWR" };
+    const mico = { name: "MICO" };
+    const pbi = { name: "PBI" };
+
+    const graph = new Graph(bos, jfk, dfw, mia, lax, hnl, san, ewr, mico, pbi);
+
+    graph.connect(dfw, lax);
+    graph.connect(dfw, jfk);
+    graph.connect(lax, hnl);
+    graph.connect(lax, san);
+    graph.connect(lax, ewr);
+    graph.connect(jfk, mia);
+    graph.connect(jfk, bos);
+    graph.connect(mia, pbi);
+    graph.connect(mia, mico);
+    graph.connect(pbi, mico);
+
+    //expect(graph.findShortestPath(dfw, lax)).toEqual([dfw, lax]);
+    //expect(graph.findShortestPath(lax, mia)).toEqual([lax, dfw, jfk, mia]);
+
+    console.log(graph.findShortestPath(dfw, pbi));
+
+    //expect(graph.findShortestPath(dfw, pbi)).toEqual([dfw, jfk, mia, pbi]);
+  });
 });
