@@ -7,10 +7,7 @@ const generateProps = (prop: Props) => {
     const words = key.split("_");
 
     if (prop[key] && words[0] === "activate" && words.length > 1) {
-      const modifiedProp = [
-        words[1],
-        words.slice(2).map((word) => capitalize(word)),
-      ].join("");
+      const modifiedProp = words.slice(1).join("_");
 
       activatedProps.push(modifiedProp);
     }
@@ -19,7 +16,22 @@ const generateProps = (prop: Props) => {
   return activatedProps;
 };
 
-const capitalize = (word: string) =>
-  word.charAt(0).toUpperCase() + word.slice(1);
+const extractKeys = (props: Props, prop: string) => {
+  const regex = new RegExp(prop + "_key");
 
-export { generateProps };
+  const keys = Object.keys(props).filter((prop) => {
+    return prop.match(regex);
+  });
+
+  return keys.filter((key) => {
+    const suffix = key.replace(new RegExp(`^${prop}_key`), "");
+    const param = `${prop}_param${suffix}`;
+
+    return param in props;
+  });
+};
+
+//const capitalize = (word: string) =>
+//  word.charAt(0).toUpperCase() + word.slice(1);
+
+export { generateProps, extractKeys };
